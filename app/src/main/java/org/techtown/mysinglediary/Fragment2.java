@@ -161,17 +161,18 @@ public class Fragment2 extends Fragment {
         btn_delete.setOnClickListener(onclickListener);
         btn_close.setOnClickListener(onclickListener);
 
-        rangeSliderView=rootView.findViewById(R.id.sliderView);
-        rangeSliderView.setOnSlideListener(new RangeSliderView.OnSlideListener() {
+
+        rangeSliderView = rootView.findViewById(R.id.sliderView);
+        final RangeSliderView.OnSlideListener listener = new RangeSliderView.OnSlideListener() {
             @Override
             public void onSlide(int index) {
                 Toast.makeText(context, "기분 : "+(index+1), Toast.LENGTH_SHORT).show();
+                moodIndex = index;
             }
-        });
-        //슬라이더뷰 디폴드 위치
+        };
+
+        rangeSliderView.setOnSlideListener(listener);
         rangeSliderView.setInitialIndex(2);
-
-
     }
 
     public void setAddress(String data) {
@@ -386,7 +387,6 @@ public class Fragment2 extends Fragment {
     private File createFile() {
         String filename = createFilename();
         File outFile = new File(context.getFilesDir(), filename);
-        Log.d("Main", "File path : " + outFile.getAbsolutePath());
 
         return outFile;
     }
