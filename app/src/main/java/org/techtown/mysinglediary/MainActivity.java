@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     Fragment3 fragment3;
 
     BottomNavigationView bottomNavigationView;
+    Toolbar toolbar;
 
     Location currentLocation;
     GPSListener gpsListener;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         fragment2=new Fragment2();
         fragment3=new Fragment3();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).commit();
@@ -193,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     @Override
     public void onTaSelected(int position) {
         if(position == 0){
-            bottomNavigationView.setSelectedItemId(R.id.tab1);
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).commit();
         }else if(position == 1){
             fragment2 = new Fragment2();
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).commit();

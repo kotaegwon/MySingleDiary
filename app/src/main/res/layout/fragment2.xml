@@ -19,8 +19,7 @@
             android:layout_height="28dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/weather_1"
-            />
+            android:src="@drawable/weather_1" />
 
         <TextView
             android:id="@+id/dateTextView"
@@ -37,9 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="예산군"
-            android:textSize="13sp"
-            />
+            android:text="천안시 대흥동"
+            android:textSize="13sp" />
 
     </RelativeLayout>
 
@@ -165,7 +163,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="60dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 

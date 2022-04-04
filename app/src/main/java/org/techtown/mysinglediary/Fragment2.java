@@ -165,7 +165,7 @@ public class Fragment2 extends Fragment {
         rangeSliderView.setOnSlideListener(new RangeSliderView.OnSlideListener() {
             @Override
             public void onSlide(int index) {
-                Toast.makeText(context, "기분 : "+index, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "기분 : "+(index+1), Toast.LENGTH_SHORT).show();
             }
         });
         //슬라이더뷰 디폴드 위치
