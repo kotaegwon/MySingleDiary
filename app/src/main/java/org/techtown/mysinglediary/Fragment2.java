@@ -27,7 +27,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.github.channguyen.rsv.BuildConfig;
 import com.github.channguyen.rsv.RangeSliderView;
 
 import java.io.File;
@@ -369,7 +368,7 @@ public class Fragment2 extends Fragment {
             e.printStackTrace();
         }
 
-        if (Build.VERSION.SDK_INT >= 24) {
+        if(Build.VERSION.SDK_INT >= 24) {
             uri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID, file);
         } else {
             uri = Uri.fromFile(file);
