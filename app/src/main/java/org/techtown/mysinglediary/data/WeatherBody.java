@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class WeatherBody {
 
+
     @SerializedName("data")
     public ArrayList<WeatherItem> datas;
 
