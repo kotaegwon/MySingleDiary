@@ -89,19 +89,24 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> im
             layout1 = itemView.findViewById(R.id.layout1);
             layout2 = itemView.findViewById(R.id.layout2);
 
-            moodImageView = itemView.findViewById(R.id.moodImageView);
             weatherImageView = itemView.findViewById(R.id.weatherImageView);
-            contentsTextView = itemView.findViewById(R.id.contentsTextView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
-            locationTextView = itemView.findViewById(R.id.locationTextView);
+            weatherImageView2 = itemView.findViewById(R.id.weatherImageView2);
+
+            pictureImageView = itemView.findViewById(R.id.pictureImageView);
             pictureExistsImageView = itemView.findViewById(R.id.pictureExistsImageView);
+
+            moodImageView = itemView.findViewById(R.id.moodImageView);
             moodImageView2 = itemView.findViewById(R.id.moodImageView2);
 
-            weatherImageView2 = itemView.findViewById(R.id.weatherImageView2);
+            contentsTextView = itemView.findViewById(R.id.contentsTextView);
             contentsTextView2 = itemView.findViewById(R.id.contentsTextView2);
+
+            locationTextView = itemView.findViewById(R.id.locationTextView);
             locationTextView2 = itemView.findViewById(R.id.locationTextView2);
+
+            dateTextView = itemView.findViewById(R.id.dateTextView);
             dateTextView2 = itemView.findViewById(R.id.dateTextView2);
-            pictureImageView = itemView.findViewById(R.id.pictureImageView);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

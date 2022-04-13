@@ -25,16 +25,16 @@ import lib.kingja.switchbutton.SwitchMultiButton;
 
 public class Fragment1 extends Fragment {
 
-    RecyclerView recyclerView;
-    NoteAdapter adapter;
-    SwitchMultiButton switchMultiButton;
+    private RecyclerView recyclerView;
+    private NoteAdapter adapter;
+    private SwitchMultiButton switchMultiButton;
 
-    Context context;
-    OnTabItemSelectedListener listener;
+    private Context context;
+    private OnTabItemSelectedListener listener;
 
-    SimpleDateFormat todayDateFormat;
+    private SimpleDateFormat todayDateFormat;
 
-    Button btn_todayWrite;
+    private Button btn_todayWrite;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -72,7 +72,7 @@ public class Fragment1 extends Fragment {
             @Override
             public void onClick(View view) {
                 if(listener != null){
-                    listener.onTaSelected(1);
+                    listener.onTabSelected(1);
                 }
             }
         });
@@ -88,20 +88,20 @@ public class Fragment1 extends Fragment {
             }
         });
 
-        LinearLayoutManager manager=new LinearLayoutManager(getContext());
         recyclerView=rootView.findViewById(R.id.recyclerView);
+        LinearLayoutManager manager=new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(manager);
 
         adapter=new NoteAdapter();
 
-        //adapter.addItem(new Note(0, "0", "충남 예산군", "","","안드로이드 꿀잼", "5", null, "3월 31일"));
+        //adapter.addItem(new Note(10, "2", "충남 예산군", "","","안드로이드 꿀잼", "5", null, "4월 13일"));
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnNoteItemClickListener() {
             @Override
             public void onItemClick(NoteAdapter.ViewHolder viewHolder, View view, int position) {
                 Note item=adapter.getItem(position);
-                Toast.makeText(getContext(),"아이템 선택됨: "+item.getContents(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"아이템 선택됨 : "+item.getContents(), Toast.LENGTH_SHORT).show();
 
                 if(listener != null){
                     listener.showFragment2(item);
@@ -111,20 +111,21 @@ public class Fragment1 extends Fragment {
     }
 
     //리스트 데이터 로딩
-    public int loadNoteListData(){
-        String sql="select _id, WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE, CREATE_DATE, MODIFY_DATE from "+NoteDatabase.TABLE_NOTE+" order by CREATE_DATE desc";
+    public int loadNoteListData() {
+        String sql = "select _id, WEATHER, ADDRESS, LOCATION_X, LOCATION_Y, CONTENTS, MOOD, PICTURE, CREATE_DATE, MODIFY_DATE from " + NoteDatabase.TABLE_NOTE + " order by CREATE_DATE desc";
 
         int recordCount = -1;
-        NoteDatabase database=NoteDatabase.getInstance(context);
-        if(database != null){
-            Cursor outCursor=database.rawQuery(sql);
+        NoteDatabase database = NoteDatabase.getInstance(context);
+        if (database != null) {
+            Cursor outCursor = database.rawQuery(sql);
 
-            recordCount=outCursor.getCount();
+            recordCount = outCursor.getCount();
 
-            ArrayList<Note> items=new ArrayList<Note>();
+            ArrayList<Note> items = new ArrayList<Note>();
 
-            for(int i=0;i<recordCount;i++){
+            for (int i = 0; i < recordCount; i++) {
                 outCursor.moveToNext();
+
                 int _id = outCursor.getInt(0);
                 String weather = outCursor.getString(1);
                 String address = outCursor.getString(2);
@@ -153,12 +154,15 @@ public class Fragment1 extends Fragment {
 
                 items.add(new Note(_id, weather, address, locationX, locationY, contents, mood, picture, createDateStr));
             }
+
             outCursor.close();
 
             adapter.setItems(items);
             adapter.notifyDataSetChanged();
 
         }
+
         return recordCount;
     }
+
 }

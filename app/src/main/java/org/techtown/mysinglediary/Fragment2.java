@@ -42,18 +42,18 @@ public class Fragment2 extends Fragment {
     int weatherIndex = 0;
     int moodIndex = 2;
 
-    Note item;
+    private Note item;
 
-    Context context;
-    OnTabItemSelectedListener listener;
-    OnRequestListener requestListener;
-    Button btn_save, btn_delete, btn_close;
-    RangeSliderView rangeSliderView;
-    TextView dateTextView, locationTextView;
+    private Context context;
+    private OnTabItemSelectedListener listener;
+    private OnRequestListener requestListener;
+    private Button btn_save, btn_delete, btn_close;
+    private RangeSliderView rangeSliderView;
+    private TextView dateTextView, locationTextView;
 
-    ImageView weatherIcon, pictureImageView;
+    private ImageView weatherIcon, pictureImageView;
 
-    EditText contentsInput;
+    private EditText contentsInput;
 
     boolean isPhotoCaptured;
     boolean isPhotoFileSaved;
@@ -90,6 +90,7 @@ public class Fragment2 extends Fragment {
         if(context != null){
             context=null;
             listener=null;
+            requestListener=null;
         }
     }
 
@@ -133,24 +134,24 @@ public class Fragment2 extends Fragment {
             public void onClick(View view) {
                 switch (view.getId()){
                     case R.id.saveButton:
-                        if(listener!=null){
-                            listener.onTaSelected(0);
-                        }
                         if(mMode == Constants.MODE_INSERT){
                             saveNote(); //db저장 메서드
                         }else if(mMode == Constants.MODE_MODIFY){
                             modifyNote();//db변경 메서드
                         }
+                        if(listener!=null){
+                            listener.onTabSelected(0);
+                        }
                         break;
                     case R.id.deleteButton:
-                        if(listener != null){
-                            listener.onTaSelected(0);
-                        }
                         deleteNote(); //db저장 메서드
+                        if(listener != null){
+                            listener.onTabSelected(0);
+                        }
                         break;
                     case R.id.closeButton:
                         if(listener != null){
-                            listener.onTaSelected(0);
+                            listener.onTabSelected(0);
                         }
                         break;
                 }
@@ -185,10 +186,13 @@ public class Fragment2 extends Fragment {
     public void setContents(String data){
         contentsInput.setText(data);
     }
+
     public void setPicture(String picturePath, int sampleSize){
         BitmapFactory.Options options=new BitmapFactory.Options();
         options.inSampleSize=sampleSize;
         resultPhotoBitmap=BitmapFactory.decodeFile(picturePath, options);
+
+        pictureImageView.setImageBitmap(resultPhotoBitmap);
     }
     public void setMood(String mood){
         try {
@@ -213,7 +217,6 @@ public class Fragment2 extends Fragment {
             setContents(item.getContents());
 
             String picturePath=item.getPicture();
-            Constants.println("picturePath : "+picturePath);
 
             if(picturePath == null || picturePath.equals("")){
                 pictureImageView.setImageResource(R.drawable.noimagefound);
@@ -240,24 +243,31 @@ public class Fragment2 extends Fragment {
         }
     }
 
-
-
     public void setWeather(String data) {
+        Constants.println("setWeather called : " + data);
+
         if (data != null) {
             if (data.equals("맑음")) {
                 weatherIcon.setImageResource(R.drawable.weather_1);
+                weatherIndex = 0;
             } else if (data.equals("구름 조금")) {
                 weatherIcon.setImageResource(R.drawable.weather_2);
+                weatherIndex = 1;
             } else if (data.equals("구름 많음")) {
                 weatherIcon.setImageResource(R.drawable.weather_3);
+                weatherIndex = 2;
             } else if (data.equals("흐림")) {
                 weatherIcon.setImageResource(R.drawable.weather_4);
+                weatherIndex = 3;
             } else if (data.equals("비")) {
                 weatherIcon.setImageResource(R.drawable.weather_5);
+                weatherIndex = 4;
             } else if (data.equals("눈/비")) {
                 weatherIcon.setImageResource(R.drawable.weather_6);
+                weatherIndex = 5;
             } else if (data.equals("눈")) {
                 weatherIcon.setImageResource(R.drawable.weather_7);
+                weatherIndex = 6;
             } else {
                 Log.d("Fragment2", "Unknown weather string : " + data);
             }
@@ -286,8 +296,12 @@ public class Fragment2 extends Fragment {
         } else if (index == 6) {
             weatherIcon.setImageResource(R.drawable.weather_7);
             weatherIndex = 6;
+        } else {
+            Log.d("Fragment2", "Unknown weather index : " + index);
         }
+
     }
+
 
     public void showDialog(int id) {
         AlertDialog.Builder builder = null;

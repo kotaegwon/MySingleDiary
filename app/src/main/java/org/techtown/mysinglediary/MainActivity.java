@@ -2,6 +2,7 @@ package org.techtown.mysinglediary;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -50,22 +51,24 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private ActionBarDrawerToggle drawerToggle;
     private DrawerLayout drawerLayout;
 
-    Fragment1 fragment1;
-    Fragment2 fragment2;
-    Fragment3 fragment3;
+    private long backpressedTime=0;
 
-    BottomNavigationView bottomNavigationView;
-    Toolbar toolbar;
+    private Fragment1 fragment1;
+    private Fragment2 fragment2;
+    private Fragment3 fragment3;
 
-    Location currentLocation;
-    GPSListener gpsListener;
+    private BottomNavigationView bottomNavigationView;
+    private Toolbar toolbar;
+
+    private Location currentLocation;
+    private GPSListener gpsListener;
 
     int locationCount=0;
-    String currentWeather;
-    String currentAddress;
-    String currentDateString;
-    Date currentDate;
-    SimpleDateFormat todayDateFormat;
+    private String currentWeather;
+    private String currentAddress;
+    private String currentDateString;
+    private Date currentDate;
+    private SimpleDateFormat todayDateFormat;
 
     public static NoteDatabase mDatabase=null;
 
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
         getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).commit();
 
-
+//        바텀내비를 사용하여 탭을 이동했지만 메뉴를 두개로 줄이면서 툴바메뉴로 바꿈
 //        bottomNavigationView=findViewById(R.id.bottom_navigation);
 //        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
 //            @Override
@@ -146,13 +149,28 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         switch (item.getItemId()){
             case R.id.tab1:
                 Toast.makeText(MainActivity.this, "목록", Toast.LENGTH_SHORT).show();
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).addToBackStack(null).commit();
                 break;
             case R.id.tab2:
                 Toast.makeText(MainActivity.this, "작성",Toast.LENGTH_SHORT).show();
-                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).addToBackStack(null).commit();
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(System.currentTimeMillis()>backpressedTime+2000){
+            backpressedTime=System.currentTimeMillis();
+
+        }else if(System.currentTimeMillis()<=backpressedTime+2000){
+            AlertDialog.Builder builder=new AlertDialog.Builder(this);
+            builder.setMessage("앱을 종료하시겠습니까?");
+            builder.setPositiveButton("아니오",((dialog, which) -> {dialog.cancel();}));
+            builder.setNegativeButton("예",((dialog, which) -> {finish();}));
+            builder.show();
+        }
     }
 
     @Override
@@ -192,17 +210,17 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     @Override
-    public void onTaSelected(int position) {
+    public void onTabSelected(int position) {
         if(position == 0){
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment1).addToBackStack(null).commit();
         }else if(position == 1){
             fragment2 = new Fragment2();
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).addToBackStack(null).commit();
         }
+
 //        else if(position==2){
 //            bottomNavigationView.setSelectedItemId(R.id.tab3);
 //        }
-
     }
 
     @Override
@@ -210,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         fragment2=new Fragment2();
         fragment2.setItem(item);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, fragment2).addToBackStack(null).commit();
     }
 
     public void showToast(String message) {
@@ -228,6 +246,11 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     public void getCurrentLocation(){
         currentDate = new Date();
         currentDateString = Constants.dateFormat3.format(currentDate);
+
+        if(todayDateFormat==null){
+            todayDateFormat=new SimpleDateFormat(getResources().getString(R.string.today_date_format));
+        }
+        currentDateString=todayDateFormat.format(currentDate);
         if(fragment2 != null){
             fragment2.setDateString(currentDateString);
         }
@@ -260,9 +283,14 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     
     public void stopLocationService(){
         LocationManager manager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        
-        manager.removeUpdates(gpsListener);
-        println("현재 위치 요청됨");
+
+        try {
+            manager.removeUpdates(gpsListener);
+            println("현재 위치 요청됨");
+        }catch (SecurityException e){
+            e.printStackTrace();
+        }
+
     }
 
     class GPSListener implements LocationListener{
@@ -397,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                         fragment2.setWeather(item.wfKor);
                     }
 
-                    //2회후 위치요청서비스 중지
+                    //2회 후 위치요청서비스 중지
                     if(locationCount>1){
                         stopLocationService();;
                     }
@@ -414,4 +442,5 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private void println(String data) {
         Log.d(TAG, data);
     }
+
 }
